@@ -9,14 +9,12 @@ from django.shortcuts import redirect
 
 # Create your views here.
 def post_list(request):
-    """
-    Create a view that will return a
-    list of Posts that were published prior to'now'
-    and render them to the 'blogposts.html' template
-    """
-    posts = Post.objects.filter(published_date__lte=timezone.now()
-        ).order_by('-published_date')
-    return render(request, "blogposts.html", {'posts': posts})
+    top = request.GET.get('top', False)
+    if top:
+        posts = Post.objects.filter(published_date__lte=timezone.now()).order_by('-views')[:3]
+    else:
+        posts = Post.objects.filter(published_date__lte=timezone.now()).order_by('-published_date')
+    return render(request, "blog/blogtests.html", {'posts': posts})
 
 def post_detail(request, id):
 	"""
